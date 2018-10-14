@@ -1,4 +1,5 @@
 # Definition for singly-linked list.
+
 class ListNode:
     def __init__(self, x):
         self.val = x
@@ -8,6 +9,7 @@ class ListNode:
 
 class Solution:
     """
+    https://leetcode.com/problems/add-two-numbers/description/
     eg.1
     2 -----> 4 -----> 3 -----> None
     5 -----> 6 -----> 4 -----> None
@@ -45,29 +47,23 @@ class Solution:
         :type l2: ListNode
         :rtype: ListNode
         """
-        v1 = l1
-        v2 = l2
-        result = None
-        pointer = None
-        while True:
-            quotient, rem = divmod(v1.val+v2.val, 10)
-            print("quotient: {}, rem: {}".format(quotient, rem))
-            print("result.val: {}, result.next.val: {}".format(result.val if result else None, result.next.val if result else None))
-            print("pointer.val: {}, pointer.next.val: {}".format(pointer.val if pointer else None, pointer.next.val if pointer else None))
-            if pointer:
-                pointer = ListNode(rem + pointer.next.val)
-                pointer.next = ListNode(quotient)
-                result = pointer
-            else:
-                pointer = ListNode(rem)
-                pointer.next = ListNode(quotient)
-                result = pointer
-            print(result)
-            print("-----")
-            if v1.next == None and v2.next == None:
-                return result
-            v1 = v1.next if v1.next else ListNode(0)
-            v2 = v2.next if v2.next else ListNode(0)
+        p = l1
+        q = l2
+        dummyHead = ListNode(0)
+        curr = dummyHead
+        carry = 0
+        while p != None or q != None:
+            x = p.val if p != None else 0
+            y = q.val if q != None else 0
+            sum = carry + x + y
+            carry = int(sum/10)
+            curr.next = ListNode(sum % 10)
+            curr = curr.next
+            p = p.next if p != None else None
+            q = q.next if q != None else None
+            if carry > 0:
+                curr.next = ListNode(carry)
+        return dummyHead.next
 
 def makeList(l):
     n_prev = None
@@ -91,7 +87,7 @@ if __name__ == '__main__':
     print("-----")
     sol = Solution()
     res = sol.addTwoNumbers(l1,l2)
-    # printList(res)
+    printList(res)
     # l1 = makeList([5])
     # l2 = makeList([5])
     # printList(l1)
